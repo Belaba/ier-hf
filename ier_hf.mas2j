@@ -1,0 +1,23 @@
+/*
+    ier_hf
+    ---------------------------
+
+    Jason Project File
+
+    This file defines the initial state of the MAS
+
+    Jason 
+    May 02, 2019 - 10:35:01
+*/
+
+MAS ier_hf {
+
+    infrastructure: Centralised
+
+    agents:
+        controller;
+
+        car;
+
+}
+

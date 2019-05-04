@@ -18,6 +18,10 @@ MAS ier_hf {
         controller;
 
         car;
+		
+        ns;
+
+        we;
 
 }
 

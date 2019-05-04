@@ -11,14 +11,19 @@ lastPriority(ns). // Last dir given priority to
 !run.
 /* Plans */
 
-+want_to_cross(Dir)[source(car)]
-	<- if ( Dir = ns) { -free(we);}
-		else { -free(ns); }
++want_to_cross[source(Dir)] : true
+	<- 
+	.print("+ -> ", Dir);
+	if ( Dir = ns) { -free(we);}
+	else { -free(ns); }
+		
 .
 
--want_to_cross(Dir)[source(car)]
-	<- if ( Dir = ns) { +free(we);}
-		else { +free(ns); }
+-want_to_cross[source(Dir)] : true
+	<-
+	.print("- -> ", Dir);
+	if ( Dir = ns) { +free(we);}
+	else { +free(ns); }
 .
 
 		
@@ -43,7 +48,8 @@ lastPriority(ns). // Last dir given priority to
 +!let_trough(X) <- .print("letting trough ", X).
 
 +!solve_gridlock
-	<- ?lastPriority(LastDir);
+	<-
+	?lastPriority(LastDir);
 	if ( LastDir = ns) { 
 		.suspend(lest_trough(ns));
 		-lastPriority(ns); +lastPriority(we);
@@ -55,7 +61,8 @@ lastPriority(ns). // Last dir given priority to
 .
 	
 +!resume_gridlock
-	<- ?lastPriority(LastDir);
+	<-
+	?lastPriority(LastDir);
 	if ( LastDir = ns) { .resume(lest_trough(ns)); }
 	else { .resume(lest_trough(we)); }
 .

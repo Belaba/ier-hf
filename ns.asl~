@@ -4,10 +4,10 @@
 
 /* Initial goals */
 
-/*!start.*/
+!start.
 
 /* Plans */
-/*
+
 +!start : true
 	<-
 	.my_name(N);
@@ -17,18 +17,4 @@
 	.wait(3000);
 	.send(controller, untell, want_to_cross);
 	.print("untold want to cross: ", N);
-.
-*/
-+want_to_cross 
-	<-
-	.my_name(N);
-	.send(controller, tell, want_to_cross);
-	.print("told want to cross: ", N)
-.
-
--want_to_cross 
-	<-
-	.my_name(N);
-	.send(controller, untell, want_to_cross);
-	.print("untold want to cross: ", N)
 .

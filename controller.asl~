@@ -45,11 +45,7 @@ lastPriority(ns). // Last dir given priority to
 	!run
 .
 		
-+!let_trough(X) 
-	<- 
-	.print("letting trough ", X);
-	lettingThrough(X)
-.
++!let_trough(X) <- .print("letting trough ", X).
 
 +!solve_gridlock
 	<-

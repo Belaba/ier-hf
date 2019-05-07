@@ -14,8 +14,6 @@ MAS ier_hf {
 
     infrastructure: Centralised
 
-    environment: IntersectEnv
-
     agents:
         controller;
 

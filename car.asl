@@ -4,8 +4,14 @@
 
 /* Initial goals */
 
-!start.
-
 /* Plans */
 
-+!start.
++my_dir(Dir) : true 
+	<-
+	.send(Dir, tell, want_to_cross)
+.
+
+-my_dir(Dir) : true
+	<-
+	.send(Dir, untell, want_to_cross)
+.

@@ -6,36 +6,26 @@ import javax.swing.*;
 public class IntersectView extends JFrame {
 	
 	IntersectModel model;
-	
-	private IntDraw intDraw;
-	private Box box;
-	private JButton but1, but2;
 		
 	public IntersectView() {
 		super("Okos keresztezõdés");
-		intDraw = new IntDraw();
+		
 		initialise();
 	}
 	
 	public void initialise() {
 		Container c = getContentPane();
 		
-		but1 = new JButton("Gomb1");
-		but2 = new JButton("Gomb2");
-		
-		box = new Box(BoxLayout.Y_AXIS);
-		box.add(intDraw);
-		box.add(but1);
-		box.add(but2);
-		
+		JLabel label = new JLabel("asdf");
+		Box box = new Box(BoxLayout.Y_AXIS);
+		box.add(label);
 		c.add(box);
-		
-		setSize(380,450);
+		setSize(600,600);
 		setVisible(true);
 	}
 	
 	public void update() {
-	   intDraw.update();	
+	 //TODO.	
 	}
 	
 }

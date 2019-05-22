@@ -27,28 +27,13 @@ lastPriority(ns). // Last dir given priority to
 .
 
 
-/*
-+accident : true
-	<-
-	.print("Accident happened, shutting down traffic");
-	.drop_intention(run);
-	.wait(3000);
-	.print("Accident solved, continuing traffic");
-	//.add_plan(run);
-	!run;
-	.drop_event(accident);
-.
 
-	*/
 +!run : accident
 	<-
 	.print("Accident happened, traffic shut down!");
 	.wait(500);
-	/* .wait(3000);
-	.print("Accident resolved, continuing traffic");
-	-accident; */
 	!run
-	.
+.
 	
 +!run : true
 	<-

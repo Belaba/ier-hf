@@ -7,10 +7,17 @@ import jason.asSyntax.*;
 import jason.environment.*;
 
 import java.util.logging.*;
+import java.util.*;
 
 
 
 public class IntersectEnv extends Environment {
+	
+	public class Agent {
+		public boolean car; //auto-e. ha nem, akkor gyalogos. :)
+		public int x,y; // koordinatak, 0<= ... < 30
+		public String dir; //mozgas iranya -> MERRE megy, nem az, hogy merrol
+	}
 
 
 
@@ -19,7 +26,9 @@ public class IntersectEnv extends Environment {
 	
 	public static boolean ltWE = false;
 	public static boolean ltNS = false;
-
+	
+	public static List<Agent> agents = new ArrayList<>();
+	
 	private IntersectModel model;
 	
 	private IntersectView gui;

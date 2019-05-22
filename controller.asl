@@ -26,7 +26,30 @@ lastPriority(ns). // Last dir given priority to
 	else { +free(ns); }
 .
 
-		
+
+/*
++accident : true
+	<-
+	.print("Accident happened, shutting down traffic");
+	.drop_intention(run);
+	.wait(3000);
+	.print("Accident solved, continuing traffic");
+	//.add_plan(run);
+	!run;
+	.drop_event(accident);
+.
+
+	*/
++!run : accident
+	<-
+	.print("Accident happened, traffic shut down!");
+	.wait(500);
+	/* .wait(3000);
+	.print("Accident resolved, continuing traffic");
+	-accident; */
+	!run
+	.
+	
 +!run : true
 	<-
 	.findall(A, free(A), L);
@@ -34,6 +57,11 @@ lastPriority(ns). // Last dir given priority to
 		!let_trough(I);
 	}
 	.wait(500);
+	/*if (accident) {
+		.print("Accident happened, shutting down traffic");
+		.wait(3000);
+		-accident;
+	}*/
 	if ( .empty(L) ) {
 		.print("Gridlock");
 		!solve_gridlock;

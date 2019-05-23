@@ -82,6 +82,7 @@ public class IntersectView extends JFrame {
 		butCarN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+				env.addAgent(true);
                 IntersectEnv.agents.add(env.new Agent(true, "n"));
             }
         });
@@ -89,6 +90,7 @@ public class IntersectView extends JFrame {
 		butCarE.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+				env.addAgent(true);
                 IntersectEnv.agents.add(env.new Agent(true, "e"));
             }
         });
@@ -96,6 +98,7 @@ public class IntersectView extends JFrame {
 		butCarS.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+				env.addAgent(true);
                 IntersectEnv.agents.add(env.new Agent(true, "s"));
             }
         });
@@ -103,6 +106,7 @@ public class IntersectView extends JFrame {
 		butCarW.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+				env.addAgent(true);
                 IntersectEnv.agents.add(env.new Agent(true, "w"));
             }
         });

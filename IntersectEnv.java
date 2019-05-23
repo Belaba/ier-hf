@@ -101,9 +101,33 @@ public class IntersectEnv extends Environment {
 		
         //addPercept(ASSyntax.parseLiteral("percept(demo)"));
     }
+	
+	public void addAgent(boolean car)
+	{
+		try
+		{
+			if(car)
+			{
+				getEnvironmentInfraTier().getRuntimeServices().createAgent(
+				"car",
+				"car.asl",
+				null,
+				null,
+				null,
+				null,
+				null);
+			}
+		
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
     @Override
     public boolean executeAction(String agName, Structure action){
+
 		if (action.getFunctor().equals("lettingThrough")) {
 			String dir = action.getTerm(0).toString();
 			if (dir.equals("ns")) {

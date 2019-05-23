@@ -8,6 +8,7 @@ import jason.environment.*;
 
 import java.util.logging.*;
 import java.util.*;
+import java.awt.Point;
 
 
 
@@ -56,15 +57,22 @@ public class IntersectEnv extends Environment {
 				if ( dirFrom == "e" && x == 7*30 && !IntersectEnv.ltWE) return;
 				if ( dirFrom == "w" && x == 4*30 && !IntersectEnv.ltWE) return;
 			}
-			
-			// ha nem kell megallni, mozgunk
+			int newX = x;
+			int newY = y;
+			// ha nem kell megallni, hova mozognank
 			switch(this.dirFrom) {
-				case "s": y-=30; break;
-				case "n": y+=30; break;
-				case "w": x+=30; break;
-				case "e": x-=30; break;
+				case "s": newY-=30; break;
+				case "n": newY+=30; break;
+				case "w": newX+=30; break;
+				case "e": newX-=30; break;
 				default: break;
 			}
+			//ellenorizzuk, hogy vannak-e elottunk
+			if (IntersectEnv.usedPoints.contains(new Point(newX, newY))) return;
+			//egyebkent mozgunk
+			x = newX;
+			y = newY;
+			IntersectEnv.usedPoints.add(new Point(newX, newY));
 		}
 	}
 
@@ -72,6 +80,7 @@ public class IntersectEnv extends Environment {
 
 	
 	public static List<Agent> agents = new ArrayList<>();
+	public static List<Point> usedPoints = new ArrayList<>();
 
 	private IntersectModel model;
 	private IntersectView gui;
@@ -125,6 +134,7 @@ public class IntersectEnv extends Environment {
     }
 	
 	public static void moveAll() {
+		usedPoints.clear();
 		agents.forEach((a) -> a.move());	
 	}
 

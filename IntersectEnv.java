@@ -16,6 +16,7 @@ public class IntersectEnv extends Environment {
 	public static boolean ltWE = false;
 	public static boolean ltNS = false;
 	public static boolean pause = false;
+	public static boolean accidentDetected = false;
 	public static int round = 0;
 	
 	public class Agent {
@@ -61,7 +62,6 @@ public class IntersectEnv extends Environment {
 		
 		public void move(boolean forced) {
 			boolean megallni = false;
-			boolean utkozes = false;
 			if (car) { //megallas a pirosnal, auto
 				if ( (x == 5*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
 					if ( (dirFrom == "n" || dirFrom == "s") && !IntersectEnv.ltNS) megallni = true;
@@ -86,10 +86,6 @@ public class IntersectEnv extends Environment {
 			}
 			//ellenorizzuk, hogy vannak-e elottunk
 			if (IntersectEnv.usedPoints.contains(new Point(newX, newY))){
-				if (forced) {
-					utkozes = true;
-					logger.info("X: "+newX+" Y: "+newY);
-				}
 				megallni = true;
 			}
 			
@@ -102,10 +98,6 @@ public class IntersectEnv extends Environment {
 			x = newX;
 			y = newY;
 			IntersectEnv.usedPoints.add(new Point(newX, newY));
-			if (utkozes) {
-				logger.info("Collision detected.");
-				addPercept("controller", Literal.parseLiteral("accident"));	
-			}
 			if (car) {
 				// NS lock
 				if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
@@ -215,19 +207,38 @@ public class IntersectEnv extends Environment {
         super.stop();
     }
 	
+	public static void collDetect() {
+		List<Point> usedPs = new ArrayList<>();
+		usedPs.clear();
+		boolean f=false;
+		for (int i=0; i<usedPoints.size(); i++) {
+			Point p = usedPoints.get(i);
+			if (usedPs.contains(p)) {
+				f = true;
+				logger.info(p.toString());
+				logger.info("X: "+p.getX()+" Y: "+p.getY() + "i: "+i);
+			} else {
+				usedPs.add(p);
+			}
+		}
+		if (f) {
+			accidentDetected = true;	
+		}
+	}
+	
 	public static void moveAll() {
-		if(pause) return;
+		if(pause || accidentDetected) return;
 		usedPoints.clear();
 		agents.forEach((a) -> {
 			if (!a.forced)
 				a.move(false);
 			else a.forced = false;
 		});	
-
+		collDetect();
 	}
 	
 	public static void forceMovePeds() {
-		if (pause) return;
+		if (pause || accidentDetected) return;
 		agents.forEach((a) -> {
 			if (!a.car) usedPoints.remove(new Point(a.x, a.y));
 		});
@@ -239,6 +250,7 @@ public class IntersectEnv extends Environment {
 				usedPoints.add(new Point(a.x, a.y));
 			}
 		});
+		collDetect();
 	}
 	
 	public static void killAll() {

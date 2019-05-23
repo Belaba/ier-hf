@@ -61,6 +61,7 @@ public class IntersectEnv extends Environment {
 		
 		public void move(boolean forced) {
 			boolean megallni = false;
+			boolean utkozes = false;
 			if (car) { //megallas a pirosnal, auto
 				if ( (x == 5*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
 					if ( (dirFrom == "n" || dirFrom == "s") && !IntersectEnv.ltNS) megallni = true;
@@ -84,7 +85,10 @@ public class IntersectEnv extends Environment {
 				default: break;
 			}
 			//ellenorizzuk, hogy vannak-e elottunk
-			if (IntersectEnv.usedPoints.contains(new Point(newX, newY)))  megallni = true;
+			if (IntersectEnv.usedPoints.contains(new Point(newX, newY))){
+				if (forced) utkozes = true;
+				megallni = true;
+			}
 			
 			if (megallni && !forced) { // ha meg kell allni es nincs forszirozva a mozgas, megallunk
 				IntersectEnv.usedPoints.add(new Point(x, y));
@@ -95,6 +99,10 @@ public class IntersectEnv extends Environment {
 			x = newX;
 			y = newY;
 			IntersectEnv.usedPoints.add(new Point(newX, newY));
+			if (utkozes) {
+				logger.info("Collision detected.");
+				addPercept("controller", Literal.parseLiteral("accident"));	
+			}
 			if (car) {
 				// NS lock
 				if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
@@ -113,6 +121,7 @@ public class IntersectEnv extends Environment {
 					removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
 				}
 			}
+			
 		}
 	}
 
@@ -160,18 +169,18 @@ public class IntersectEnv extends Environment {
 	}
 	
 	public void pulseAction() {
-		if (round % 20 == 0) {
-				removePercept("controller", Literal.parseLiteral("priority(we)"));	
-				addPercept("controller", Literal.parseLiteral("priority(ns)"));
-				logger.info("Set priority to NS.");
-			} else if (round % 10 == 0) {
-				removePercept("controller", Literal.parseLiteral("priority(ns)"));	
-				addPercept("controller", Literal.parseLiteral("priority(we)"));	
-				logger.info("Set priority to WE.");
-			}
-			round++; // szamlalo novelese
-			moveAll(); // agensek mozgatasa
-			gui.update(); // tabla frissitese	
+		if (round % 10 == 0) {
+			removePercept("controller", Literal.parseLiteral("priority(we)"));	
+			addPercept("controller", Literal.parseLiteral("priority(ns)"));
+			logger.info("Set priority to NS.");
+		} else if (round % 5 == 0) {
+			removePercept("controller", Literal.parseLiteral("priority(ns)"));	
+			addPercept("controller", Literal.parseLiteral("priority(we)"));	
+			logger.info("Set priority to WE.");
+		}
+		round++; // szamlalo novelese
+		moveAll(); // agensek mozgatasa
+		gui.update(); // tabla frissitese	
 	}
 	
     @Override
@@ -211,6 +220,7 @@ public class IntersectEnv extends Environment {
 				a.move(false);
 			else a.forced = false;
 		});	
+
 	}
 	
 	public static void forceMovePeds() {

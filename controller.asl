@@ -40,13 +40,15 @@ lastPriority(ns). // Last dir given priority to
 	.findall(A, free(A), L);
 	for ( .member(I,L) ) {
 		!let_trough(I);
-		.wait(1000); //latszodik a lampak leptetese
+		//.wait(1000); //latszodik a lampak 
+		send_pulse;
+		.wait(500);
+		send_pulse;
+		.wait(500);
+		send_pulse;
+		.wait(500);
 	}
-	/*if (accident) {
-		.print("Accident happened, shutting down traffic");
-		.wait(3000);
-		-accident;
-	}*/
+
 	if ( .empty(L) ) {
 		.print("Gridlock");
 		!solve_gridlock;

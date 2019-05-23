@@ -6,12 +6,14 @@
 
 /* Plans */
 
-+my_dir(Dir) : true 
++my_dir(Dir, MyName) : true 
 	<-
-	.send(Dir, tell, want_to_cross)
+	.send(Dir, tell, want_to_cross(MyName));
+	.print("told", " ", Dir, " ", MyName)
 .
 
--my_dir(Dir) : true
+-my_dir(Dir, MyName) : true
 	<-
-	.send(Dir, untell, want_to_cross)
+	.send(Dir, untell, want_to_cross(MyName));
+	.print("told",  " ", Dir, " ", MyName)
 .	

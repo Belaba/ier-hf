@@ -85,8 +85,21 @@ public class IntersectEnv extends Environment {
 			x = newX;
 			y = newY;
 			IntersectEnv.usedPoints.add(new Point(newX, newY));
-			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) ) ) {
+			// NS lock
+			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
 				addPercept(name, Literal.parseLiteral("my_dir(ns)"));
+			}
+			// NS unlock
+			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 7*30) || (x == 6*30 && y == 3*30) ) ) {
+				removePercept(name, Literal.parseLiteral("my_dir(ns)"));
+			}
+			// WE lock
+			if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 2*30 && y == 6*30) || (x == 8*30 && y == 5*30) ) ) {
+				addPercept(name, Literal.parseLiteral("my_dir(we)"));
+			}
+			// WE unlock
+			if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 7*30 && y == 6*30) || (x == 3*30 && y == 5*30) ) ) {
+				removePercept(name, Literal.parseLiteral("my_dir(we)"));
 			}
 		}
 	}

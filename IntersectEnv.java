@@ -86,7 +86,10 @@ public class IntersectEnv extends Environment {
 			}
 			//ellenorizzuk, hogy vannak-e elottunk
 			if (IntersectEnv.usedPoints.contains(new Point(newX, newY))){
-				if (forced) utkozes = true;
+				if (forced) {
+					utkozes = true;
+					logger.info("X: "+newX+" Y: "+newY);
+				}
 				megallni = true;
 			}
 			
@@ -125,7 +128,7 @@ public class IntersectEnv extends Environment {
 		}
 	}
 
-    public Logger logger = Logger.getLogger("ier_hf.mas2j."+IntersectEnv.class.getName());
+    public static Logger logger = Logger.getLogger("ier_hf.mas2j."+IntersectEnv.class.getName());
 
 	
 	public static List<Agent> agents = new ArrayList<>();
@@ -226,8 +229,11 @@ public class IntersectEnv extends Environment {
 	public static void forceMovePeds() {
 		if (pause) return;
 		agents.forEach((a) -> {
+			if (!a.car) usedPoints.remove(new Point(a.x, a.y));
+		});
+		
+		agents.forEach((a) -> {
 			if (!a.car) {
-				usedPoints.remove(new Point(a.x, a.y));
 				a.move(true);
 				a.forced = true;
 				usedPoints.add(new Point(a.x, a.y));

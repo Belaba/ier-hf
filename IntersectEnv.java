@@ -20,10 +20,12 @@ public class IntersectEnv extends Environment {
 		public boolean car; //auto-e. ha nem, akkor gyalogos. :)
 		public int x,y; // koordinatak, 0<= ... < 12*30=360, egyebkent kiert a palyarol, torolni.
 		public String dirFrom; //mozgas iranya -> MERROL megy, nem az, hogy merre
+		public String name; // Agens neve
 		
-		public Agent(boolean _car, String _dirFrom) {
+		public Agent(boolean _car, String _dirFrom, String _name ) {
 			this.car = _car;
 			this.dirFrom = _dirFrom;
+			this.name = _name;
 			
 			// kezdo koordinatak meghatarozasa az indulasi irany alapjan
 			if (car) {
@@ -106,19 +108,16 @@ public class IntersectEnv extends Environment {
 		
 		gui = new IntersectView(this);
 		
-		agents.add(new Agent(false, "n"));
-		agents.add(new Agent(false, "s"));
-		
         //addPercept(ASSyntax.parseLiteral("percept(demo)"));
     }
 	
-	public void addAgent(boolean car)
+	public String addAgent(boolean car)
 	{
 		try
 		{
 			if(car)
 			{
-				getEnvironmentInfraTier().getRuntimeServices().createAgent(
+				return getEnvironmentInfraTier().getRuntimeServices().createAgent(
 				"car",
 				"car.asl",
 				null,
@@ -133,6 +132,7 @@ public class IntersectEnv extends Environment {
 		{
 			e.printStackTrace();
 		}
+		return "";
 	}
 
     @Override

@@ -82,60 +82,60 @@ public class IntersectView extends JFrame {
 		butCarN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-				env.addAgent(true);
-                IntersectEnv.agents.add(env.new Agent(true, "n"));
+				String name = env.addAgent(true);
+                IntersectEnv.agents.add(env.new Agent(true, "n", name));
             }
         });
 		
 		butCarE.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-				env.addAgent(true);
-                IntersectEnv.agents.add(env.new Agent(true, "e"));
+				String name = env.addAgent(true);
+                IntersectEnv.agents.add(env.new Agent(true, "e", name));
             }
         });
 		
 		butCarS.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-				env.addAgent(true);
-                IntersectEnv.agents.add(env.new Agent(true, "s"));
+				String name = env.addAgent(true);
+                IntersectEnv.agents.add(env.new Agent(true, "s", name));
             }
         });
 		
 		butCarW.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-				env.addAgent(true);
-                IntersectEnv.agents.add(env.new Agent(true, "w"));
+				String name = env.addAgent(true);
+                IntersectEnv.agents.add(env.new Agent(true, "w", name));
             }
         });
 		
 		butPedN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IntersectEnv.agents.add(env.new Agent(false, "n"));
+                IntersectEnv.agents.add(env.new Agent(false, "n", ""));
             }
         });
 		
 		butPedE.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IntersectEnv.agents.add(env.new Agent(false, "e"));
+                IntersectEnv.agents.add(env.new Agent(false, "e", ""));
             }
         });
 		
 		butPedS.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IntersectEnv.agents.add(env.new Agent(false, "s"));
+                IntersectEnv.agents.add(env.new Agent(false, "s", ""));
             }
         });
 		
 		butPedW.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IntersectEnv.agents.add(env.new Agent(false, "w"));
+                IntersectEnv.agents.add(env.new Agent(false, "w", ""));
             }
         });
 	}

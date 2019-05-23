@@ -22,8 +22,9 @@ public class IntersectView extends JFrame {
 	public BoxLayout bL3 = new BoxLayout(c3, BoxLayout.Y_AXIS);
 	public JLabel carLabel, pedLabel;
 		
-	public IntersectView(IntersectEnv ie) {
-		super("Okos keresztezõdés");
+
+	public IntersectView() {
+		super("Okos keresztezodes");
 		intDraw = new IntDraw();
 		env = ie;
 		setResizable(false);

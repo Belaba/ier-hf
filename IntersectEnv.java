@@ -85,7 +85,7 @@ public class IntersectEnv extends Environment {
 				default: break;
 			}
 			//ellenorizzuk, hogy vannak-e elottunk
-			if (IntersectEnv.usedPoints.contains(new Point(newX, newY))){
+			if ( (car && IntersectEnv.carPoints.contains(new Point(newX, newY))) || (!car && IntersectEnv.pedPoints.contains(new Point(newX, newY))) ){
 				megallni = true;
 			}
 			
@@ -118,7 +118,7 @@ public class IntersectEnv extends Environment {
 					removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
 				}
 			}
-			
+			if (x > 360 || y > 360) this.kill();
 		}
 	}
 
@@ -126,8 +126,8 @@ public class IntersectEnv extends Environment {
 
 	
 	public static List<Agent> agents = new ArrayList<>();
-	public static List<Point> usedPoints = new ArrayList<>();
-	public static List<Point> collisionPoints = new ArrayList<>();
+	public static List<Point> carPoints = new ArrayList<>();
+	public static List<Point> pedPoints = new ArrayList<>();
 
 	private IntersectModel model;
 	private IntersectView gui;
@@ -136,11 +136,6 @@ public class IntersectEnv extends Environment {
     @Override
     public void init(String[] args) {
         super.init(args);
-		
-		/*model = new IntersectModel();
-		IntersectView view = new IntersectView(model);
-		model.setView(view);*/
-		
 		gui = new IntersectView(this);
     }
 	
@@ -176,9 +171,19 @@ public class IntersectEnv extends Environment {
 			addPercept("controller", Literal.parseLiteral("priority(we)"));	
 			logger.info("Set priority to WE.");
 		}
+		
+		moveAll(this); // agensek mozgatasa
+		gui.update(); // tabla frissitese
+		
+		if (round % 15 == 0) { // "kisetalt" agensek torlese az env listajabol
+			for (int i=0; i<agents.size(); i++) {
+				Agent a = agents.get(i);
+				if (a.x > 360 || a.y > 360)
+					agents.remove(a);
+			}
+		}
+		
 		round++; // szamlalo novelese
-		moveAll(); // agensek mozgatasa
-		gui.update(); // tabla frissitese	
 	}
 	
     @Override
@@ -210,43 +215,40 @@ public class IntersectEnv extends Environment {
         super.stop();
     }
 	
-	public static void collDetect() {
-		Set<Point> usedPs = new HashSet<>();
-		usedPs.clear();
-		boolean f=false;
-		for (int i=0; i<collisionPoints.size(); i++) {
-			Point p = collisionPoints.get(i);
-			if (usedPs.contains(p)) {
+	public void collDetect() {
+		boolean f = false;
+		for (int i=0; i<pedPoints.size(); i++) {
+			Point p = pedPoints.get(i);
+			if (carPoints.contains(new Point( Math.round((float)p.getX()/30.0f)*30 , Math.round((float)p.getY()/30.0f)*30 ))){
 				f = true;
 				logger.info(p.toString());
 				logger.info("X: "+p.getX()+" Y: "+p.getY() + "i: "+i);
-			} else {
-				usedPs.add(p);
+				
 			}
 		}
 		if (f) {
-			accidentDetected = true;	
+			accidentDetected = true;
+			addPercept("controller", Literal.parseLiteral("accident"));	
 		}
 	}
 	
-	public static void moveAll() {
+	public static void moveAll(IntersectEnv e) {
 		if(pause || accidentDetected) return;
-		usedPoints.clear();
-		collisionPoints.clear();
+		carPoints.clear();
+		pedPoints.clear();
 		agents.forEach((a) -> {
 			if (!a.forced)
 				a.move(false);
 			else a.forced = false;
 		});	
-		collDetect();
+		e.collDetect();
 	}
 	
-	public static void forceMovePeds() {
+	public static void forceMovePeds(IntersectEnv e) {
 		if (pause || accidentDetected) return;
 		agents.forEach((a) -> {
 			if (!a.car) { 
-				usedPoints.remove(new Point(a.x, a.y));
-				collisionPoints.remove(new Point(Math.round((float)a.x/30.0f)*30, Math.round((float)a.y/30.0f)*30));
+				pedPoints.remove(new Point(a.x, a.y));
 			}
 		});
 		
@@ -256,33 +258,28 @@ public class IntersectEnv extends Environment {
 				a.forced = true;
 			}
 		});
-		collDetect();
+		e.collDetect();
 	}
 	
-	public static void killAll() {
+	public void killAll() {
 		pause = true;
-		usedPoints.clear();
-		collisionPoints.clear();
+		carPoints.clear();
+		pedPoints.clear();
 		agents.forEach((a) -> a.kill());
 		agents.clear();
+		accidentDetected = false;
+		removePercept("controller", Literal.parseLiteral("accident"));
 		pause = false;
 	}
 	
 	public static void regPoint(IntersectEnv.Agent a, int X, int Y) {
-		int rX, rY;
-		if (!a.car) {
-			rX = Math.round((float)X/30.0f)*30;
-			rY = Math.round((float)Y/30.0f)*30;
-		} else {
-			rX = X;
-			rY = Y;
-		}
-		Point p = new Point(rX, rY);
-		if (a.car || !collisionPoints.contains(p))
-			collisionPoints.add(p);
-		usedPoints.add(new Point(X, Y));
+		Point p = new Point(X, Y);
+		if (a.car)
+			carPoints.add(p);
+		else
+			pedPoints.add(p);
+		
 	}
 
 }
-
 

@@ -142,14 +142,14 @@ public class IntersectView extends JFrame {
 		butPedCross.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent e) {
-                IntersectEnv.forceMovePeds();
+                IntersectEnv.forceMovePeds(env);
             }
 		});
 		
 		butCleanup.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IntersectEnv.killAll();
+                env.killAll();
             }
         });
 	}

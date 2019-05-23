@@ -28,10 +28,10 @@ public class IntersectEnv extends Environment {
 			// kezdo koordinatak meghatarozasa az indulasi irany alapjan
 			if (car) {
 				switch (this.dirFrom) {
-					case "n": x=5*30; y=0; break;
-					case "s": x=6*30; y=11*30; break;
-					case "w": x=0; y=6*30; break;
-					case "e": x=11*30; y=5*30; break;
+					case "n": x=5*30; y=-30; break;
+					case "s": x=6*30; y=12*30; break;
+					case "w": x=-30; y=6*30; break;
+					case "e": x=12*30; y=5*30; break;
 					default: break;
 				}
 			} else {
@@ -46,20 +46,24 @@ public class IntersectEnv extends Environment {
 		}
 		
 		public void move() {
+			boolean megallni = false;
 			if (car) { //megallas a pirosnal, auto
-				if ( (x == 4*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
-					if ( (dirFrom == "n" || dirFrom == "s") && !IntersectEnv.ltNS) return;
-					if ( (dirFrom == "e" || dirFrom == "w") && !IntersectEnv.ltWE) return;
+				if ( (x == 5*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
+					if ( (dirFrom == "n" || dirFrom == "s") && !IntersectEnv.ltNS) megallni = true;
+					if ( (dirFrom == "e" || dirFrom == "w") && !IntersectEnv.ltWE) megallni = true;
 				}
 			} else { // ~ gyalogos
-				if ( dirFrom == "s" && y == 7*30 && !IntersectEnv.ltNS) return; 
-				if ( dirFrom == "n" && y == 4*30 && !IntersectEnv.ltNS) return;
-				if ( dirFrom == "e" && x == 7*30 && !IntersectEnv.ltWE) return;
-				if ( dirFrom == "w" && x == 4*30 && !IntersectEnv.ltWE) return;
+				if ( dirFrom == "s" && y == 7*30 && !IntersectEnv.ltNS) megallni = true; 
+				if ( dirFrom == "n" && y == 4*30 && !IntersectEnv.ltNS) megallni = true;
+				if ( dirFrom == "e" && x == 7*30 && !IntersectEnv.ltWE) megallni = true;
+				if ( dirFrom == "w" && x == 4*30 && !IntersectEnv.ltWE) megallni = true;
 			}
+			
+			
+			
 			int newX = x;
 			int newY = y;
-			// ha nem kell megallni, hova mozognank
+			// ha nincs piros, hova mozognank
 			switch(this.dirFrom) {
 				case "s": newY-=30; break;
 				case "n": newY+=30; break;
@@ -68,7 +72,13 @@ public class IntersectEnv extends Environment {
 				default: break;
 			}
 			//ellenorizzuk, hogy vannak-e elottunk
-			if (IntersectEnv.usedPoints.contains(new Point(newX, newY))) return;
+			if (IntersectEnv.usedPoints.contains(new Point(newX, newY)))  megallni = true;
+			
+			if (megallni) { // ha meg kell allni, megallunk
+				IntersectEnv.usedPoints.add(new Point(x, y));
+				return;
+			}
+			
 			//egyebkent mozgunk
 			x = newX;
 			y = newY;

@@ -50,8 +50,8 @@ public class IntersectEnv extends Environment {
 		
 		public void kill()
 		{
-			removePercept(name, Literal.parseLiteral("my_dir(ns)"));
-			removePercept(name, Literal.parseLiteral("my_dir(we)"));
+			removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
+			removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
 			getEnvironmentInfraTier().getRuntimeServices().killAgent(
 			name,
 			"controller");
@@ -98,19 +98,19 @@ public class IntersectEnv extends Environment {
 			IntersectEnv.usedPoints.add(new Point(newX, newY));
 			// NS lock
 			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
-				addPercept(name, Literal.parseLiteral("my_dir(ns)"));
+				addPercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
 			}
 			// NS unlock
 			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 7*30) || (x == 6*30 && y == 3*30) ) ) {
-				removePercept(name, Literal.parseLiteral("my_dir(ns)"));
+				removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
 			}
 			// WE lock
 			if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 2*30 && y == 6*30) || (x == 8*30 && y == 5*30) ) ) {
-				addPercept(name, Literal.parseLiteral("my_dir(we)"));
+				addPercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
 			}
 			// WE unlock
 			if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 7*30 && y == 6*30) || (x == 3*30 && y == 5*30) ) ) {
-				removePercept(name, Literal.parseLiteral("my_dir(we)"));
+				removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
 			}
 		}
 	}

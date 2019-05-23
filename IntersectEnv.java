@@ -45,9 +45,19 @@ public class IntersectEnv extends Environment {
 		}
 		
 		public void move() {
-			if (true) {
-				if ( (this.dirFrom == "n" || this.dirFrom == "s") && !IntersectEnv.ltNS) return;
+			if (car) { //megallas a pirosnal, auto
+				if ( (x == 4*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
+					if ( (dirFrom == "n" || dirFrom == "s") && !IntersectEnv.ltNS) return;
+					if ( (dirFrom == "e" || dirFrom == "w") && !IntersectEnv.ltWE) return;
+				}
+			} else { // ~ gyalogos
+				if ( dirFrom == "s" && y == 7*30 && !IntersectEnv.ltNS) return; 
+				if ( dirFrom == "n" && y == 4*30 && !IntersectEnv.ltNS) return;
+				if ( dirFrom == "e" && x == 7*30 && !IntersectEnv.ltWE) return;
+				if ( dirFrom == "w" && x == 4*30 && !IntersectEnv.ltWE) return;
 			}
+			
+			// ha nem kell megallni, mozgunk
 			switch(this.dirFrom) {
 				case "s": y-=30; break;
 				case "n": y+=30; break;

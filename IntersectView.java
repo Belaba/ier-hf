@@ -12,7 +12,7 @@ public class IntersectView extends JFrame {
 	private JButton but1, but2;
 		
 	public IntersectView() {
-		super("Okos keresztezõdés");
+		super("Okos keresztezodes");
 		intDraw = new IntDraw();
 		initialise();
 	}

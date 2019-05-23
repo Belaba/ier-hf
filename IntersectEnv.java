@@ -12,6 +12,8 @@ import java.util.*;
 
 
 public class IntersectEnv extends Environment {
+	public static boolean ltWE = false;
+	public static boolean ltNS = false;
 	
 	public class Agent {
 		public boolean car; //auto-e. ha nem, akkor gyalogos. :)
@@ -43,6 +45,9 @@ public class IntersectEnv extends Environment {
 		}
 		
 		public void move() {
+			if (true) {
+				if ( (this.dirFrom == "n" || this.dirFrom == "s") && !IntersectEnv.ltNS) return;
+			}
 			switch(this.dirFrom) {
 				case "s": y-=30; break;
 				case "n": y+=30; break;
@@ -55,8 +60,7 @@ public class IntersectEnv extends Environment {
 
     private Logger logger = Logger.getLogger("ier_hf.mas2j."+IntersectEnv.class.getName());
 
-	public static boolean ltWE = false;
-	public static boolean ltNS = false;
+	
 	public static List<Agent> agents = new ArrayList<>();
 
 	private IntersectModel model;

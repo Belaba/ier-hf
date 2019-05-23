@@ -85,10 +85,13 @@ public class IntersectEnv extends Environment {
 			x = newX;
 			y = newY;
 			IntersectEnv.usedPoints.add(new Point(newX, newY));
+			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) ) ) {
+				addPercept(name, Literal.parseLiteral("my_dir(ns)"));
+			}
 		}
 	}
 
-    private Logger logger = Logger.getLogger("ier_hf.mas2j."+IntersectEnv.class.getName());
+    public Logger logger = Logger.getLogger("ier_hf.mas2j."+IntersectEnv.class.getName());
 
 	
 	public static List<Agent> agents = new ArrayList<>();
@@ -107,7 +110,6 @@ public class IntersectEnv extends Environment {
 		model.setView(view);*/
 		
 		gui = new IntersectView(this);
-		
         //addPercept(ASSyntax.parseLiteral("percept(demo)"));
     }
 	
@@ -117,7 +119,7 @@ public class IntersectEnv extends Environment {
 		{
 			if(car)
 			{
-				return getEnvironmentInfraTier().getRuntimeServices().createAgent(
+				String name = getEnvironmentInfraTier().getRuntimeServices().createAgent(
 				"car",
 				"car.asl",
 				null,
@@ -125,6 +127,8 @@ public class IntersectEnv extends Environment {
 				null,
 				null,
 				null);
+				getEnvironmentInfraTier().getRuntimeServices().startAgent(name);
+				return name;
 			}
 		
 		}

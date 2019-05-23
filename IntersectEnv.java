@@ -147,6 +147,11 @@ public class IntersectEnv extends Environment {
 				ltNS = false;
 				ltWE = true;
 			}
+		} else if (action.getFunctor().equals("send_pulse")) {
+			moveAll(); // agensek mozgatasa
+		
+			gui.update();
+		
 		} else {
 			logger.info("executing: "+action+", but not implemented!");
 		}
@@ -154,9 +159,7 @@ public class IntersectEnv extends Environment {
 			informAgsEnvironmentChanged();
         }
 		
-		moveAll(); // agensek mozgatasa
 		
-		gui.update();
 		
         return true; // the action was executed with success
     }

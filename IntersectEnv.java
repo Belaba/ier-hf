@@ -71,7 +71,7 @@ public class IntersectEnv extends Environment {
 		IntersectView view = new IntersectView(model);
 		model.setView(view);*/
 		
-		gui = new IntersectView();
+		gui = new IntersectView(this);
 		
 		agents.add(new Agent(false, "n"));
 		agents.add(new Agent(false, "s"));

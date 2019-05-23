@@ -16,6 +16,7 @@ public class IntersectEnv extends Environment {
 	public static boolean ltWE = false;
 	public static boolean ltNS = false;
 	public static boolean pause = false;
+	public static int round = 0;
 	
 	public class Agent {
 		public boolean car; //auto-e. ha nem, akkor gyalogos. :)
@@ -48,8 +49,7 @@ public class IntersectEnv extends Environment {
 			}
 		}
 		
-		public void kill()
-		{
+		public void kill() {
 			removePercept(name, Literal.parseLiteral("my_dir(ns)"));
 			removePercept(name, Literal.parseLiteral("my_dir(we)"));
 			getEnvironmentInfraTier().getRuntimeServices().killAgent(
@@ -71,9 +71,7 @@ public class IntersectEnv extends Environment {
 				if ( dirFrom == "e" && x == 7*30 && !IntersectEnv.ltWE) megallni = true;
 				if ( dirFrom == "w" && x == 4*30 && !IntersectEnv.ltWE) megallni = true;
 			}
-			
-			
-			
+				
 			int newX = x;
 			int newY = y;
 			// ha nincs piros, hova mozognank
@@ -134,15 +132,11 @@ public class IntersectEnv extends Environment {
 		model.setView(view);*/
 		
 		gui = new IntersectView(this);
-        //addPercept(ASSyntax.parseLiteral("percept(demo)"));
     }
 	
-	public String addAgent(boolean car)
-	{
-		try
-		{
-			if(car)
-			{
+	public String addAgent(boolean car) {
+		try {
+			if(car) {
 				String name = getEnvironmentInfraTier().getRuntimeServices().createAgent(
 				"car",
 				"car.asl",
@@ -156,8 +150,7 @@ public class IntersectEnv extends Environment {
 			}
 		
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 		return "";
@@ -175,19 +168,24 @@ public class IntersectEnv extends Environment {
 				ltNS = false;
 				ltWE = true;
 			}
-		} else if (action.getFunctor().equals("send_pulse")) {
+		} else if (action.getFunctor().equals("send_pulse")) { 
+			if (round % 10 == 0) {
+				removePercept("controller", Literal.parseLiteral("priority(ns)"));	
+				addPercept("controller", Literal.parseLiteral("priority(we)"));	
+				logger.info("Set priority to WE.");
+			} else if (round % 20 == 0) {
+				removePercept("controller", Literal.parseLiteral("priority(we)"));	
+				addPercept("controller", Literal.parseLiteral("priority(ns)"));
+				logger.info("Set priority to NS.");
+			}
+			round++; // szamlalo novelese
 			moveAll(); // agensek mozgatasa
-		
-			gui.update();
-		
+			gui.update(); // tabla frissitese
 		} else {
 			logger.info("executing: "+action+", but not implemented!");
 		}
-        if (true) { // you may improve this condition
-			informAgsEnvironmentChanged();
-        }
-		
-		
+       
+		informAgsEnvironmentChanged();
 		
         return true; // the action was executed with success
     }

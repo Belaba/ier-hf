@@ -4,11 +4,14 @@
 free(ns).
 free(we).
 
+priority(ns).
+
 lastPriority(ns). // Last dir given priority to
 
 /* Initial goals */
 
 !run.
+!pulse.
 /* Plans */
 
 +want_to_cross[source(Dir)] : true
@@ -34,19 +37,21 @@ lastPriority(ns). // Last dir given priority to
 	.wait(500);
 	!run
 .
+
++!pulse : true
+	<-
+	send_pulse;
+	.print("pulse");
+	.wait(1000);
+	!pulse;
+.
 	
 +!run : true
 	<-
 	.findall(A, free(A), L);
 	for ( .member(I,L) ) {
 		!let_trough(I);
-		//.wait(1000); //latszodik a lampak 
-		send_pulse;
-		.wait(500);
-		send_pulse;
-		.wait(500);
-		send_pulse;
-		.wait(500);
+		.wait(13);
 	}
 
 	if ( .empty(L) ) {
@@ -62,21 +67,33 @@ lastPriority(ns). // Last dir given priority to
 		
 +!let_trough(X) 
 	<- 
-	.print("letting trough ", X);
+	//.print("letting trough ", X);
 	lettingThrough(X)
 .
 
-+!solve_gridlock
++!solve_gridlock : true
 	<-
-	?lastPriority(LastDir);
-	if ( LastDir = ns) { 
-		.suspend(let_trough(ns));
-		-lastPriority(ns); +lastPriority(we);
+	?priority(A);
+	.my_name(MyName);
+	if ( A = ns) {
+		.print("here");
+		.abolish(free(we));
+		free(ns);
+		.send(MyName, tell, free(ns));
+	} else {
+		.abolish(free(ns));
+		free(we);
+		.send(MyName, tell, free(we));
 	}
-	else {
-		.suspend(let_trough(we));
-		-lastPriority(we); +lastPriority(ns);
-	}
+	//?lastPriority(LastDir);
+	// if ( LastDir = ns) { 
+		// .suspend(let_trough(ns));
+		// -lastPriority(ns); +lastPriority(we);
+	// }
+	// else {
+		// .suspend(let_trough(we));
+		// -lastPriority(we); +lastPriority(ns);
+	// }
 .
 	
 +!resume_gridlock

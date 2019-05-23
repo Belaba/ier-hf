@@ -23,7 +23,7 @@ public class IntersectView extends JFrame {
 	public JLabel carLabel, pedLabel;
 		
 
-	public IntersectView() {
+	public IntersectView(IntersectEnv ie) {
 		super("Okos keresztezodes");
 		intDraw = new IntDraw();
 		env = ie;

@@ -26,6 +26,13 @@ lastPriority(ns). // Last dir given priority to
 -want_to_cross(CarName)[source(Dir)] : true
 	<-
 	.print("- -> ", Dir);
+	if ( Dir = ns) { +free(we);}
+	else { +free(ns); }
+.
+
+/* -want_to_cross(CarName)[source(Dir)] : true
+	<-
+	.print("- -> ", Dir);
 	.findall(_, want_to_cross(_)[source(ns)], L);
 	if( .empty(L)) {
 		.print("ns ures");
@@ -40,7 +47,7 @@ lastPriority(ns). // Last dir given priority to
 	} else {
 		.print("we nem ures, L: ", L);
 	}
-.
+. */
 
 
 

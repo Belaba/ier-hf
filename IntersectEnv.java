@@ -15,6 +15,7 @@ import java.awt.Point;
 public class IntersectEnv extends Environment {
 	public static boolean ltWE = false;
 	public static boolean ltNS = false;
+	public static boolean pause = false;
 	
 	public class Agent {
 		public boolean car; //auto-e. ha nem, akkor gyalogos. :)
@@ -45,6 +46,16 @@ public class IntersectEnv extends Environment {
 					default: break;
 				}
 			}
+		}
+		
+		public void kill()
+		{
+			removePercept(name, Literal.parseLiteral("my_dir(ns)"));
+			removePercept(name, Literal.parseLiteral("my_dir(we)"));
+			getEnvironmentInfraTier().getRuntimeServices().killAgent(
+			name,
+			"controller");
+			//IntersectEnv.agents.remove(this);
 		}
 		
 		public void move() {
@@ -188,8 +199,20 @@ public class IntersectEnv extends Environment {
     }
 	
 	public static void moveAll() {
+		if(pause)
+		{
+			return;
+		}
 		usedPoints.clear();
 		agents.forEach((a) -> a.move());	
+	}
+	
+	public static void killAll() {
+		pause = true;
+		usedPoints.clear();
+		agents.forEach((a) -> a.kill());
+		agents.clear();
+		pause = false;
 	}
 
 }

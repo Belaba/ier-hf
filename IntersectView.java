@@ -138,6 +138,13 @@ public class IntersectView extends JFrame {
                 IntersectEnv.agents.add(env.new Agent(false, "w", ""));
             }
         });
+		
+		butCleanup.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IntersectEnv.killAll();
+            }
+        });
 	}
 	
 	

@@ -23,6 +23,7 @@ public class IntersectEnv extends Environment {
 		public int x,y; // koordinatak, 0<= ... < 12*30=360, egyebkent kiert a palyarol, torolni.
 		public String dirFrom; //mozgas iranya -> MERROL megy, nem az, hogy merre
 		public String name; // Agens neve
+		public boolean forced = false; // legutobb kenyszerrel atment-e a piroson
 		
 		public Agent(boolean _car, String _dirFrom, String _name ) {
 			this.car = _car;
@@ -58,7 +59,7 @@ public class IntersectEnv extends Environment {
 			"controller");
 		}
 		
-		public void move() {
+		public void move(boolean forced) {
 			boolean megallni = false;
 			if (car) { //megallas a pirosnal, auto
 				if ( (x == 5*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
@@ -85,7 +86,7 @@ public class IntersectEnv extends Environment {
 			//ellenorizzuk, hogy vannak-e elottunk
 			if (IntersectEnv.usedPoints.contains(new Point(newX, newY)))  megallni = true;
 			
-			if (megallni) { // ha meg kell allni, megallunk
+			if (megallni && !forced) { // ha meg kell allni es nincs forszirozva a mozgas, megallunk
 				IntersectEnv.usedPoints.add(new Point(x, y));
 				return;
 			}
@@ -94,21 +95,23 @@ public class IntersectEnv extends Environment {
 			x = newX;
 			y = newY;
 			IntersectEnv.usedPoints.add(new Point(newX, newY));
-			// NS lock
-			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
-				addPercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
-			}
-			// NS unlock
-			if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 7*30) || (x == 6*30 && y == 3*30) ) ) {
-				removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
-			}
-			// WE lock
-			if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 2*30 && y == 6*30) || (x == 8*30 && y == 5*30) ) ) {
-				addPercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
-			}
-			// WE unlock
-			if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 7*30 && y == 6*30) || (x == 3*30 && y == 5*30) ) ) {
-				removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
+			if (car) {
+				// NS lock
+				if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
+					addPercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
+				}
+				// NS unlock
+				if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 7*30) || (x == 6*30 && y == 3*30) ) ) {
+					removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
+				}
+				// WE lock
+				if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 2*30 && y == 6*30) || (x == 8*30 && y == 5*30) ) ) {
+					addPercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
+				}
+				// WE unlock
+				if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 7*30 && y == 6*30) || (x == 3*30 && y == 5*30) ) ) {
+					removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
+				}
 			}
 		}
 	}
@@ -155,10 +158,25 @@ public class IntersectEnv extends Environment {
 		}
 		return "";
 	}
-
+	
+	public void pulseAction() {
+		if (round % 20 == 0) {
+				removePercept("controller", Literal.parseLiteral("priority(we)"));	
+				addPercept("controller", Literal.parseLiteral("priority(ns)"));
+				logger.info("Set priority to NS.");
+			} else if (round % 10 == 0) {
+				removePercept("controller", Literal.parseLiteral("priority(ns)"));	
+				addPercept("controller", Literal.parseLiteral("priority(we)"));	
+				logger.info("Set priority to WE.");
+			}
+			round++; // szamlalo novelese
+			moveAll(); // agensek mozgatasa
+			gui.update(); // tabla frissitese	
+	}
+	
     @Override
     public boolean executeAction(String agName, Structure action){
-
+		if (pause) return true;
 		if (action.getFunctor().equals("lettingThrough")) {
 			String dir = action.getTerm(0).toString();
 			if (dir.equals("ns")) {
@@ -169,18 +187,7 @@ public class IntersectEnv extends Environment {
 				ltWE = true;
 			}
 		} else if (action.getFunctor().equals("send_pulse")) { 
-			if (round % 10 == 0) {
-				removePercept("controller", Literal.parseLiteral("priority(ns)"));	
-				addPercept("controller", Literal.parseLiteral("priority(we)"));	
-				logger.info("Set priority to WE.");
-			} else if (round % 20 == 0) {
-				removePercept("controller", Literal.parseLiteral("priority(we)"));	
-				addPercept("controller", Literal.parseLiteral("priority(ns)"));
-				logger.info("Set priority to NS.");
-			}
-			round++; // szamlalo novelese
-			moveAll(); // agensek mozgatasa
-			gui.update(); // tabla frissitese
+			pulseAction();
 		} else {
 			logger.info("executing: "+action+", but not implemented!");
 		}
@@ -197,12 +204,25 @@ public class IntersectEnv extends Environment {
     }
 	
 	public static void moveAll() {
-		if(pause)
-		{
-			return;
-		}
+		if(pause) return;
 		usedPoints.clear();
-		agents.forEach((a) -> a.move());	
+		agents.forEach((a) -> {
+			if (!a.forced)
+				a.move(false);
+			else a.forced = false;
+		});	
+	}
+	
+	public static void forceMovePeds() {
+		if (pause) return;
+		agents.forEach((a) -> {
+			if (!a.car) {
+				usedPoints.remove(new Point(a.x, a.y));
+				a.move(true);
+				a.forced = true;
+				usedPoints.add(new Point(a.x, a.y));
+			}
+		});
 	}
 	
 	public static void killAll() {

@@ -57,13 +57,15 @@ public class IntDraw extends JPanel {
 		}
 		
 		// Agensek kirajzolasa
-		// TODO!!!
 		
 		List agents = IntersectEnv.agents;
 		for (int i=0; i<agents.size(); i++) {
 			IntersectEnv.Agent currAgent = (IntersectEnv.Agent)agents.get(i);
 			if (currAgent.car) { //ha autot rajzolunk
-				g.setColor(cCar);
+				if (currAgent.dirFrom == "n" || currAgent.dirFrom == "s")
+					g.setColor(new Color(102,102,255));
+				else
+					g.setColor(cCar);
 				g.fillRect(currAgent.x+6, currAgent.y+6, 18, 18);
 			} else { // ha gyalogost
 				g.setColor(cPed);

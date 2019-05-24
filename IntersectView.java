@@ -154,7 +154,12 @@ public class IntersectView extends JFrame {
         });
 	}
 	
-	
+	public void showCollisionMsg() {
+		JOptionPane.showMessageDialog(this,
+			"Collision detected. :(",
+			"Collision",
+			JOptionPane.WARNING_MESSAGE);	
+	}
 	
 	public void update() {
 	   intDraw.update();	

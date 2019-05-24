@@ -228,7 +228,8 @@ public class IntersectEnv extends Environment {
 		}
 		if (f) {
 			accidentDetected = true;
-			addPercept("controller", Literal.parseLiteral("accident"));	
+			addPercept("controller", Literal.parseLiteral("accident"));
+			gui.showCollisionMsg();
 		}
 	}
 	

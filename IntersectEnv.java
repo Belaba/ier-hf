@@ -88,7 +88,6 @@ public class IntersectEnv extends Environment {
 			}
 			
 			if (megallni && !forced) { // ha meg kell allni es nincs forszirozva a mozgas, megallunk
-				//IntersectEnv.usedPoints.add(new Point(x, y));
 				regPoint(this, x,y);
 				return;
 			}
@@ -96,7 +95,6 @@ public class IntersectEnv extends Environment {
 			//egyebkent mozgunk
 			x = newX;
 			y = newY;
-			//IntersectEnv.usedPoints.add(new Point(x, y));
 			regPoint(this, x,y);
 			if (car) {
 				// NS lock

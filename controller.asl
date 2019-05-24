@@ -4,10 +4,6 @@
 free(ns).
 free(we).
 
-//priority(ns).
-//priority(we).
-
-lastPriority(ns). // Last dir given priority to
 
 /* Initial goals */
 
@@ -38,12 +34,6 @@ lastPriority(ns). // Last dir given priority to
 	.send(we,untell,abolish_things);
 .
 
-/* -want_to_cross(CarName)[source(Dir)] : true
-	<-
-	.print("- -> ", Dir);
-	if ( Dir = ns) { +free(we);}
-	else { +free(ns); }
-. */
 
 -want_to_cross(CarName)[source(we)] : true
 	<-
@@ -68,7 +58,6 @@ lastPriority(ns). // Last dir given priority to
 		.print("ns nem ures, L: ", L2);
 	} 
 .
-
 
 
 +!run : accident
@@ -101,7 +90,6 @@ lastPriority(ns). // Last dir given priority to
 	if ( .empty(L) ) {
 		.print("Gridlock");
 		!solve_gridlock;
-		?lastPriority(Dir);
 		.print("Given priority to: ", Dir);
 		!let_trough(Dir);
 		!resume_gridlock;
@@ -129,20 +117,10 @@ lastPriority(ns). // Last dir given priority to
 		//free(we);
 		.send(MyName, tell, free(we));
 	}
-	//?lastPriority(LastDir);
-	// if ( LastDir = ns) { 
-		// .suspend(let_trough(ns));
-		// -lastPriority(ns); +lastPriority(we);
-	// }
-	// else {
-		// .suspend(let_trough(we));
-		// -lastPriority(we); +lastPriority(ns);
-	// }
 .
 	
 +!resume_gridlock
 	<-
-	?lastPriority(LastDir);
 	if ( LastDir = ns) { .resume(let_trough(ns)); }
 	else { .resume(let_trough(we)); }
 .

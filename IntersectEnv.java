@@ -53,8 +53,11 @@ public class IntersectEnv extends Environment {
 
 		public void kill()
 		{
-			removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
-			removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
+			if (car) {
+				removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
+				removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
+				logger.info("my_dir(we,"+ name +")");
+			}
 			getEnvironmentInfraTier().getRuntimeServices().killAgent(
 			name,
 			"controller");
@@ -151,6 +154,7 @@ public class IntersectEnv extends Environment {
 				null,
 				null);
 				getEnvironmentInfraTier().getRuntimeServices().startAgent(name);
+				logger.info(name);
 				return name;
 			}
 		

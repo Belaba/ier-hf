@@ -70,12 +70,10 @@ public class IntersectView extends JFrame {
 		controlPanel.add(c1);
 		controlPanel.add(c2);
 		controlPanel.add(c3);
-		
-		//box.add(but2);
-		
+				
 		c.add(box);
 		
-		setSize(380,560);
+		setSize(380,550);
 		setVisible(true);
 		
 		

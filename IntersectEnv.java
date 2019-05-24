@@ -61,7 +61,7 @@ public class IntersectEnv extends Environment {
 		public void move(boolean forced) {
 			boolean megallni = false;
 			if (car) { //megallas a pirosnal, auto
-				if ( (x == 5*30 && y == 3*30) || (x == 6*30 && y == 7*30) || (x == 3*30 && y == 6*30) || (x == 7*30 && y == 5*30)) {
+				if ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) || (x == 2*30 && y == 6*30) || (x == 8*30 && y == 5*30)) {
 					if ( (dirFrom == "n" || dirFrom == "s") && !IntersectEnv.ltNS) megallni = true;
 					if ( (dirFrom == "e" || dirFrom == "w") && !IntersectEnv.ltWE) megallni = true;
 				}
@@ -100,7 +100,7 @@ public class IntersectEnv extends Environment {
 			regPoint(this, x,y);
 			if (car) {
 				// NS lock
-				if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 2*30) || (x == 6*30 && y == 8*30) ) ) {
+				if ( (dirFrom == "n" || dirFrom == "s") && ( (x == 5*30 && y == 1*30) || (x == 6*30 && y == 9*30) ) ) {
 					addPercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
 				}
 				// NS unlock
@@ -108,7 +108,7 @@ public class IntersectEnv extends Environment {
 					removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
 				}
 				// WE lock
-				if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 2*30 && y == 6*30) || (x == 8*30 && y == 5*30) ) ) {
+				if ( (dirFrom == "e" || dirFrom == "w") && ( (x == 1*30 && y == 6*30) || (x == 9*30 && y == 5*30) ) ) {
 					addPercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
 				}
 				// WE unlock
@@ -185,7 +185,10 @@ public class IntersectEnv extends Environment {
 		if (pause) return true;
 		if (action.getFunctor().equals("lettingThrough")) {
 			String dir = action.getTerm(0).toString();
-			if (dir.equals("ns")) {
+			if (dir.equals("noone")) {
+				ltNS = false;
+				ltWE = false;
+			} else if (dir.equals("ns")) {
 				ltNS = true;
 				ltWE = false;
 			} else {

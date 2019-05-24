@@ -90,6 +90,10 @@ lastPriority(ns). // Last dir given priority to
 	<-
 	.findall(A, free(A), L);
 	for ( .member(I,L) ) {
+		if (not .length(L) == 1) {
+			!let_trough(noone);
+			.wait(1000);
+		}
 		!let_trough(I);
 		.wait(1000);
 	}

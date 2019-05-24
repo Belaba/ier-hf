@@ -80,16 +80,16 @@ public class IntDraw extends JPanel {
 		// ~ NS
 		if (IntersectEnv.ltNS) g.setColor(Color.green);
 		else g.setColor(Color.red);
-		g.fillOval(5*cellWidth, 3*cellHeight+(2*cellHeight/3), 10, 10);
-		g.fillOval(7*cellWidth-cellWidth/3, 7*cellHeight, 10, 10);
+		g.fillOval(5*cellWidth, 2*cellHeight+(2*cellHeight/3), 10, 10);
+		g.fillOval(7*cellWidth-cellWidth/3, 8*cellHeight, 10, 10);
 		g.fillRect(4*cellWidth+9, 5*cellHeight-2, 12, 4);
 		g.fillRect(4*cellWidth+9, 7*cellHeight-2, 12, 4);
 		
 		// ~ WE
 		if (IntersectEnv.ltWE) g.setColor(Color.green);
 		else g.setColor(Color.red);
-		g.fillOval(3*cellWidth+(2*cellWidth/3), 6*cellHeight+(2*cellHeight/3), 10, 10);
-		g.fillOval(7*cellWidth, 5*cellHeight, 10, 10);
+		g.fillOval(2*cellWidth+(2*cellWidth/3), 6*cellHeight+(2*cellHeight/3), 10, 10);
+		g.fillOval(8*cellWidth, 5*cellHeight, 10, 10);
 		g.fillRect(5*cellWidth-2, 4*cellHeight+9, 4, 12);
 		g.fillRect(7*cellWidth-2, 4*cellHeight+9, 4, 12);
 	}

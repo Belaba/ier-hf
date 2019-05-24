@@ -32,3 +32,8 @@
 	.send(controller, untell, want_to_cross(CarName));
 	.print("untold want to cross: ", N, " name: ", CarName)
 .
+
++abolish_things 
+	<-
+	.abolish(want_to_cross(_));
+	.

@@ -53,11 +53,6 @@ public class IntersectEnv extends Environment {
 
 		public void kill()
 		{
-			if (car) {
-				removePercept(name, Literal.parseLiteral("my_dir(ns,"+ name +")"));
-				removePercept(name, Literal.parseLiteral("my_dir(we,"+ name +")"));
-				logger.info("my_dir(we,"+ name +")");
-			}
 			getEnvironmentInfraTier().getRuntimeServices().killAgent(
 			name,
 			"controller");
@@ -146,7 +141,7 @@ public class IntersectEnv extends Environment {
 		try {
 			if(car) {
 				String name = getEnvironmentInfraTier().getRuntimeServices().createAgent(
-				"car",
+				"car"+( Math.abs(new Random().nextInt() % 10000) ),
 				"car.asl",
 				null,
 				null,
@@ -178,14 +173,9 @@ public class IntersectEnv extends Environment {
 		
 		moveAll(this); // agensek mozgatasa
 		gui.update(); // tabla frissitese
-		
-		if (round % 15 == 0) { // "kisetalt" agensek torlese az env listajabol
-			for (int i=0; i<agents.size(); i++) {
-				Agent a = agents.get(i);
-				if (a.x > 360 || a.y > 360)
-					agents.remove(a);
-			}
-		}
+
+		if (round % 15 == 0)
+			removePercept("controller", Literal.parseLiteral("abolish_things"));
 		
 		round++; // szamlalo novelese
 	}
@@ -247,6 +237,11 @@ public class IntersectEnv extends Environment {
 			else a.forced = false;
 		});	
 		e.collDetect();
+		for (int i=0; i<agents.size(); i++) {
+			Agent a = agents.get(i);
+			if (a.x > 360 || a.y > 360)
+				agents.remove(a);
+		}
 	}
 	
 	public static void forceMovePeds(IntersectEnv e) {
@@ -273,6 +268,8 @@ public class IntersectEnv extends Environment {
 		agents.forEach((a) -> a.kill());
 		agents.clear();
 		accidentDetected = false;
+		addPercept("controller", Literal.parseLiteral("abolish_things"));
+		
 		removePercept("controller", Literal.parseLiteral("accident"));
 		pause = false;
 	}

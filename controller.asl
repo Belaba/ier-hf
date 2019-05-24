@@ -23,31 +23,51 @@ lastPriority(ns). // Last dir given priority to
 		
 .
 
--want_to_cross(CarName)[source(Dir)] : true
++abolish_things 
+	<-
+	.abolish(want_to_cross(_));
+	.send(ns,tell,abolish_things);
+	.send(we,tell,abolish_things);
+	+free(ns);
+	+free(we);
+.
+
+-abolish_things
+	<-
+	.send(ns,untell,abolish_things);
+	.send(we,untell,abolish_things);
+.
+
+/* -want_to_cross(CarName)[source(Dir)] : true
 	<-
 	.print("- -> ", Dir);
 	if ( Dir = ns) { +free(we);}
 	else { +free(ns); }
-.
+. */
 
-/*-want_to_cross(CarName)[source(Dir)] : true
+-want_to_cross(CarName)[source(we)] : true
 	<-
-	.print("- -> ", Dir);
-	.findall(_, want_to_cross(_)[source(ns)], L);
-	if( .empty(L)) {
-		.print("ns ures");
-		+free(we);
-	} else {
-		.print("ns nem ures, L: ", L);
-	}
-	.findall(_, want_to_cross(_)[source(we)], L);
-	if( .empty(L)) {
+	.print("- -> ", we);
+	.findall(_, want_to_cross(_)[source(we)], L1);
+	if( .empty(L1)) {
 	.print("we ures");
 		+free(ns);
 	} else {
-		.print("we nem ures, L: ", L);
+		.print("we nem ures, L: ", L1);
 	}
-.*/
+.
+
+-want_to_cross(CarName)[source(ns)] : true
+	<-
+	.print("- -> ", ns);
+	.findall(_, want_to_cross(_)[source(ns)], L2);
+	if( .empty(L2)) {
+		.print("ns ures");
+		+free(we);
+	} else {
+		.print("ns nem ures, L: ", L2);
+	} 
+.
 
 
 
@@ -62,7 +82,7 @@ lastPriority(ns). // Last dir given priority to
 	<-
 	send_pulse;
 	.print("pulse");
-	.wait(1000);
+	.wait(500);
 	!pulse;
 .
 	
@@ -71,7 +91,7 @@ lastPriority(ns). // Last dir given priority to
 	.findall(A, free(A), L);
 	for ( .member(I,L) ) {
 		!let_trough(I);
-		.wait(200);
+		.wait(1000);
 	}
 
 	if ( .empty(L) ) {

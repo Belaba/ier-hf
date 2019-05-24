@@ -15,5 +15,5 @@
 -my_dir(Dir, MyName) : true
 	<-
 	.send(Dir, untell, want_to_cross(MyName));
-	.print("told",  " ", Dir, " ", MyName)
+	.print("untold",  " ", Dir, " ", MyName)
 .	

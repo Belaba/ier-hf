@@ -75,7 +75,7 @@ public class IntersectView extends JFrame {
 		
 		c.add(box);
 		
-		setSize(380,560);
+		setSize(380,550);
 		setVisible(true);
 		
 		

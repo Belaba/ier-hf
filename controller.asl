@@ -92,7 +92,7 @@ lastPriority(ns). // Last dir given priority to
 	for ( .member(I,L) ) {
 		if (not .length(L) == 1) {
 			!let_trough(noone);
-			.wait(1000);
+			.wait(2000);
 		}
 		!let_trough(I);
 		.wait(1000);
